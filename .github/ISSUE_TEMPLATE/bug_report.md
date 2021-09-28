@@ -1,0 +1,36 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: "[BUG] "
+labels: bug
+assignees: ''
+
+---
+
+**Describe the bug**
+A clear and concise description of what the bug is.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Define the workflow steps with values like
+```yaml
+    steps:
+      - name: 'Move issue to Todo'
+        uses: leonsteinhaeuser/project-beta-automations@v0.1.0
+        with:
+          github_token: $GITHUB_TOKEN
+          organization: $ORGANIZATION
+          project_id: $PROJECT_NUMBER
+          resource_node_id: $ISSUE_ID
+          status_value: "Todo"
+```
+
+**Expected behavior**
+A clear and concise description of what you expected to happen.
+
+**Workflow (please complete the following information):**
+ - OS: [e.g. ubuntu-20.04]
+ - App version [e.g. v0.1.0]
+
+**Additional context**
+Add any other context about the problem here.
