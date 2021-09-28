@@ -1,0 +1,34 @@
+name: "project beta automations"
+description: 'Greet someone and record the time'
+inputs:
+  github_token:
+    description: 'Defines the token used to moved project cards.'
+    required: true
+    default: ""
+  organization:
+    description: 'Organization the project is stored in'
+    required: true
+    default: ""
+  project_id:
+    description: 'Project ID owned by the organization'
+    required: true
+    default: ""
+  resource_node_id:
+    description: 'Defines the global node ID of the GitHub issue or pull request'
+    required: true
+    default: ""
+  status_value:
+    description: 'Defines the target card the issue or pull request should moved to. Value must be of type string. Example: "Todo"'
+    required: true
+    default: ""
+#outputs:
+#  time: # id of output
+#    description: 'The time we greeted you'
+runs:
+  using: "composite"
+  steps:
+    - name: "Execute automation"
+      env:
+        GITHUB_TOKEN: ${{ env.github_token }}
+      shell: bash
+      run: "./entrypoint.sh "
