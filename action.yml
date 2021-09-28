@@ -1,8 +1,8 @@
 name: "project beta automations"
-description: 'Greet someone and record the time'
+description: 'GitHub beta projects status field automation for Issues and Pull Requests'
 inputs:
   github_token:
-    description: 'Defines the token used to moved project cards.'
+    description: 'Permission token that grants permission to the GitHub API..'
     required: true
     default: ""
   organization:
@@ -18,12 +18,9 @@ inputs:
     required: true
     default: ""
   status_value:
-    description: 'Defines the target card the issue or pull request should moved to. Value must be of type string. Example: "Todo"'
+    description: 'Specifies the destination card to which the issue or pull request should be moved. The value must be of type string. Example: "Todo"'
     required: true
     default: ""
-#outputs:
-#  time: # id of output
-#    description: 'The time we greeted you'
 runs:
   using: "composite"
   steps:
@@ -31,4 +28,4 @@ runs:
       env:
         GITHUB_TOKEN: ${{ env.github_token }}
       shell: bash
-      run: "./entrypoint.sh "
+      run: "./entrypoint.sh ${{ env.organization }} ${{ env.project_id }} ${{ env.resource_node_id }} ${{ env.status_value }}"
