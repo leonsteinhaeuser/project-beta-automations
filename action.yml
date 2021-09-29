@@ -1,8 +1,8 @@
 name: "project beta automations"
 description: 'GitHub beta projects status field automation for Issues and Pull Requests'
 inputs:
-  github_token:
-    description: 'Permission token that grants permission to the GitHub API..'
+  gh_token:
+    description: 'Permission token that grants permission to the GitHub API.'
     required: true
     default: ""
   organization:
@@ -24,6 +24,14 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: "Print env"
+      shell: bash
+      run: printenv
+
+    - name: "Authenticate gh cli"
+      shell: bash
+      run: echo "${{ env.gh_token }}" | gh auth login --with-token
+
     - name: "Execute automation"
       working-directory: ${{ github.action_path }}
       env:
