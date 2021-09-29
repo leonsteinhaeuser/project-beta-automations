@@ -6,7 +6,7 @@ local RESOURCE_ID=$3 # pr or issue id
 local STATUS_VALUE=$status_value
 
 # load lib bash functions
-source project.sh
+source gh_api_lib.sh
 
 # request gh api and returns the project settings
 getProject $PROJECT_NAME $ORGANIZATION_PROJECT_ID

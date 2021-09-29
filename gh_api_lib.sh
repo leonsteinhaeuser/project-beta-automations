@@ -40,7 +40,9 @@ function extractStatusFieldNodeSettingsByValue() {
 }
 
 # getItemID queries the github api for the specific item_id
-# Required arguments
+# Required arguments:
+#   1: project id
+#   2: resource node id
 function getItemID() {
     local project_id=$1
     local resource_id=$2
@@ -54,6 +56,12 @@ function getItemID() {
     }' -f project=$project_id -f resource_id=$resource_id --jq '.data.addProjectNextItem.projectNextItem.id' | sed -e "s+\"++g"
 }
 
+# updateSingleSelectField updates the given item field with the defined value
+# Required arguments:
+#   1: project id
+#   2: project item id
+#   3: field id
+#   4: field option id
 function updateSingleSelectField() {
     local project_id=$1
     local item_id=$2
@@ -82,6 +90,12 @@ function updateSingleSelectField() {
     }' -f project=$project_id -f item=$item_id -f fieldid=$field_id -f fieldOption=$field_option | sed -e "s+\"++g")
 }
 
+# updateNonSingleSelectField updates the given item field with the defined value
+# Required arguments:
+#   1: project id
+#   2: project item id
+#   3: field id
+#   4: field value
 function updateNonSingleSelectField() {
     local PROJECT_ID=$1
     local ITEM_ID=$2
