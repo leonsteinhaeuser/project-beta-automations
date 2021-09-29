@@ -25,7 +25,8 @@ runs:
   using: "composite"
   steps:
     - name: "Execute automation"
+      working-directory: ${{ github.action_path }}
       env:
         GITHUB_TOKEN: ${{ env.github_token }}
       shell: bash
-      run: "./entrypoint.sh ${{ env.organization }} ${{ env.project_id }} ${{ env.resource_node_id }} ${{ env.status_value }}"
+      run: "${{ github.action_path }}/entrypoint.sh ${{ env.organization }} ${{ env.project_id }} ${{ env.resource_node_id }} ${{ env.status_value }}"
