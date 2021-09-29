@@ -2,8 +2,6 @@
 
 This repository provides the ability to automate GitHub issues and pull requests along with the new project board. To do this, it automates the **Status** field to put issues and pull requests in the desired status.
 
-**This app is still a work in progress and should be used with caution.**
-
 ## Example workflow within your repository
 
 Note: GITHUB_TOKEN does not have the necessary scopes to access projects (beta).
