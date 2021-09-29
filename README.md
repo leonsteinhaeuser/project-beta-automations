@@ -25,84 +25,70 @@ on:
       - reopened
       - review_requested
       - closed
-env:
-  GITHUB_TOKEN: ${{ secrets.YOUR_TOKEN }}
-  ORGANIZATION: sample-org
-  PROJECT_NUMBER: 1
 jobs:
   issue_opened_and_reopened:
     name: issue_opened_and_reopened
     runs-on: ubuntu-latest
     if: github.event_name == 'issues' && github.event.action == 'opened' || github.event.action == 'reopened'
-    env:
-      ISSUE_ID: ${{ github.event.issue.node_id }}
     steps:
-      - name: 'Move issue to Todo'
-        uses: leonsteinhaeuser/project-beta-automations@v0.1.0
+      - name: 'Move issue to "Todo"'
+        uses: leonsteinhaeuser/project-beta-automations@v0.0.6
         with:
-          github_token: $GITHUB_TOKEN
-          organization: $ORGANIZATION
-          project_id: $PROJECT_NUMBER
-          resource_node_id: $ISSUE_ID
+          gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          organization: sample-org
+          project_id: 1
+          resource_node_id: ${{ github.event.issue.node_id }}
           status_value: "Todo"
   issue_closed:
     name: issue_closed
     runs-on: ubuntu-latest
     if: github.event_name == 'issues' && github.event.action == 'closed'
-    env:
-      ISSUE_ID: ${{ github.event.issue.node_id }}
     steps:
-      - name: 'Moved issue to Closed'
-        uses: leonsteinhaeuser/project-beta-automations@v0.1.0
+      - name: 'Moved issue to "Done"'
+        uses: leonsteinhaeuser/project-beta-automations@v0.0.6
         with:
-          github_token: $GITHUB_TOKEN
-          organization: $ORGANIZATION
-          project_id: $PROJECT_NUMBER
-          resource_node_id: $ISSUE_ID
+          gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          organization: sample-org
+          project_id: 1
+          resource_node_id: ${{ github.event.issue.node_id }}
           status_value: "Done"
   pr_opened_reopened_review_requested:
     name: pr_opened_reopened_review_requested
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'review_requested'
-    env:
-      PR_ID: ${{ github.event.pull_request.node_id }}
     steps:
       - name: 'Move PR to "In Progress"'
-        uses: leonsteinhaeuser/project-beta-automations@v0.1.0
+        uses: leonsteinhaeuser/project-beta-automations@v0.0.6
         with:
-          github_token: $GITHUB_TOKEN
-          organization: $ORGANIZATION
-          project_id: $PROJECT_NUMBER
-          resource_node_id: $PR_ID
+          gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          organization: sample-org
+          project_id: 1
+          resource_node_id: ${{ github.event.pull_request.node_id }}
           status_value: "In Progress"
   pr_ready_for_review:
     name: pr_ready_for_review
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.action == 'ready_for_review'
-    env:
-      PR_ID: ${{ github.event.pull_request.node_id }}
     steps:
       - name: 'Move PR to "Ready for Review"'
-        uses: leonsteinhaeuser/project-beta-automations@v0.1.0
+        uses: leonsteinhaeuser/project-beta-automations@v0.0.6
         with:
-          github_token: $GITHUB_TOKEN
-          organization: $ORGANIZATION
-          project_id: $PROJECT_NUMBER
-          resource_node_id: $PR_ID
+          gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          organization: sample-org
+          project_id: 1
+          resource_node_id: ${{ github.event.pull_request.node_id }}
           status_value: "Ready for Review"
   pr_closed:
     name: pr_closed
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    env:
-      ISSUE_ID: ${{ github.event.issue.node_id }}
     steps:
       - name: 'Move PR to "Closed"'
-        uses: leonsteinhaeuser/project-beta-automations@v0.1.0
+        uses: leonsteinhaeuser/project-beta-automations@v0.0.6
         with:
-          github_token: $GITHUB_TOKEN
-          organization: $ORGANIZATION
-          project_id: $PROJECT_NUMBER
-          resource_node_id: $PR_ID
+          gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          organization: sample-org
+          project_id: 1
+          resource_node_id: ${{ github.event.pull_request.node_id }}
           status_value: "Done"
 ```
