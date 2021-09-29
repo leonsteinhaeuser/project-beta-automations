@@ -1,15 +1,15 @@
 #!/bin/bash
 
-project_name=$1 # organization name
+organization_name=$1 # organization name
 organization_project_id=$2 # organization id
-resource_id=$3 # pr or issue id
-status_value=$status_value
+resource_id=$3 # pr or issue node id
+status_value=$4 # text representation of the card
 
 # load lib bash functions
 source gh_api_lib.sh
 
 # request gh api and returns the project settings
-getProject $project_name $organization_project_id
+getProject $organization_name $organization_project_id
 
 PROJECT_ID=$(extractProjectID)
 
