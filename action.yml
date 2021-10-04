@@ -33,4 +33,4 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.gh_token }}
       shell: bash
-      run: "${{ github.action_path }}/entrypoint.sh ${{ inputs.organization }} ${{ inputs.project_id }} ${{ inputs.resource_node_id }} ${{ inputs.status_value }}"
+      run: "${{ github.action_path }}/entrypoint.sh \"${{ inputs.organization }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.status_value }}\""
