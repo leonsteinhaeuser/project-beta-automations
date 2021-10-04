@@ -22,8 +22,7 @@ status_value_OPTION_ID=$(extractStatusFieldNodeSettingsByValue "$status_value")
 echo "PROJECT_ID: $PROJECT_ID"
 echo "ITEM_ID: $ITEM_ID"
 echo "STATUS_FIELD_ID: $STATUS_FIELD_ID"
-
 echo "status_value_OPTION_ID: $status_value_OPTION_ID"
 
 # update single select field
-updateSingleSelectField $PROJECT_ID $ITEM_ID $STATUS_FIELD_ID $status_value_OPTION_ID
+updateSingleSelectField "$PROJECT_ID" "$ITEM_ID" "$STATUS_FIELD_ID" "$status_value_OPTION_ID"
