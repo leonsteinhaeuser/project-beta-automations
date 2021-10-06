@@ -30,7 +30,7 @@ jobs:
     if: github.event_name == 'issues' && github.event.action == 'opened' || github.event.action == 'reopened'
     steps:
       - name: 'Move issue to "Todo"'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           organization: sample-org
@@ -43,7 +43,7 @@ jobs:
     if: github.event_name == 'issues' && github.event.action == 'closed'
     steps:
       - name: 'Moved issue to "Done"'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           organization: sample-org
@@ -56,7 +56,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'review_requested'
     steps:
       - name: 'Move PR to "In Progress"'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           organization: sample-org
@@ -69,7 +69,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'ready_for_review'
     steps:
       - name: 'Move PR to "Ready for Review"'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           organization: sample-org
@@ -82,7 +82,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     steps:
       - name: 'Move PR to "Closed"'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           organization: sample-org
