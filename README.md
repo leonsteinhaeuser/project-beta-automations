@@ -1,6 +1,6 @@
 # project-beta-automations
 
-This repository provides the ability to automate GitHub issues and pull requests along with the new project board. To do this, it automates the **Status** field to put issues and pull requests in the desired status.
+This repository provides the ability to automate GitHub issues and pull requests for [Github Projects (Beta)](https://docs.github.com/en/issues/trying-out-the-new-projects-experience/about-projects). To do this, it automates the **Status** field to put issues and pull requests in the desired status, and therefore the desired column in the Board view. If the issue or pull request is not already in the Project, it will be added.
 
 ## Example workflow within your repository
 
