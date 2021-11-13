@@ -7,7 +7,11 @@ inputs:
     default: ""
   organization:
     description: 'Organization the project is stored in'
-    required: true
+    required: false
+    default: ""
+  user:
+    description: 'User the project is stored in'
+    required: false
     default: ""
   project_id:
     description: 'Project ID owned by the organization'
@@ -28,9 +32,30 @@ runs:
       shell: bash
       run: echo "${{ inputs.gh_token }}" | gh auth login --with-token
 
-    - name: "Execute automation"
+    - name: "Check if User or Organization is set"
+      if: ${{ inputs.organization }} == "" && ${{ inputs.user }} == ""
+      uses: actions/github-script@v3
+      with:
+        script: |
+          core.setFailed('either user or organization is not specified.')
+
+    - name: "Check if User and Organization are set"
+      if: ${{ inputs.organization }} != "" && ${{ inputs.user }} != ""
+      uses: actions/github-script@v3
+      with:
+        script: |
+          core.setFailed('user and organization field is set. Only one is supported.')
+
+    - name: "Execute Organization automation"
       working-directory: ${{ github.action_path }}
       env:
         GITHUB_TOKEN: ${{ inputs.gh_token }}
       shell: bash
       run: "${{ github.action_path }}/entrypoint.sh \"${{ inputs.organization }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.status_value }}\""
+
+    - name: "Execute User automation"
+      working-directory: ${{ github.action_path }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.gh_token }}
+      shell: bash
+      run: "${{ github.action_path }}/entrypoint_user.sh \"${{ inputs.user }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.status_value }}\""
