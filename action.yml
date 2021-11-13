@@ -33,14 +33,14 @@ runs:
       run: echo "${{ inputs.gh_token }}" | gh auth login --with-token
 
     - name: "Check if User or Organization is set"
-      if: inputs.organization == "" && inputs.user == ""
+      if: inputs.organization == '' && inputs.user == ''
       uses: actions/github-script@v3
       with:
         script: |
           core.setFailed('either user or organization is not specified.')
 
     - name: "Check if User and Organization are set"
-      if: inputs.organization != "" && inputs.user != ""
+      if: inputs.organization != '' && inputs.user != ''
       uses: actions/github-script@v3
       with:
         script: |
