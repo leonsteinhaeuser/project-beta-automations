@@ -47,6 +47,7 @@ runs:
           core.setFailed('user and organization field is set. Only one is supported.')
 
     - name: "Execute Organization automation"
+      if: inputs.organization != ''
       working-directory: ${{ github.action_path }}
       env:
         GITHUB_TOKEN: ${{ inputs.gh_token }}
@@ -54,6 +55,7 @@ runs:
       run: "${{ github.action_path }}/entrypoint.sh \"${{ inputs.organization }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.status_value }}\""
 
     - name: "Execute User automation"
+      if: inputs.user != ''
       working-directory: ${{ github.action_path }}
       env:
         GITHUB_TOKEN: ${{ inputs.gh_token }}
