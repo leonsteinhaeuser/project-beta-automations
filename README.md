@@ -177,3 +177,9 @@ jobs:
           resource_node_id: ${{ github.event.pull_request.node_id }}
           status_value: "Done"
 ```
+
+## Project board
+
+Since the issues and pull requests from this repository are also managed by this automation, you can take an example from the public project board to see what it looks like.
+
+[Project board](https://github.com/users/leonsteinhaeuser/projects/6).
