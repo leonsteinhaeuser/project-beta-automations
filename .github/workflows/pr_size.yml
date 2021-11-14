@@ -1,0 +1,22 @@
+name: PR Size Label
+on: pull_request
+
+jobs:
+  size-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add size label
+        uses: "pascalgn/size-label-action@v0.4.3"
+        env:
+          GITHUB_TOKEN: "${{ secrets.PROJECT_PERMISSIONS_TOKEN }}"
+          IGNORED: ".gitignore\n*.md\n*.json\n*.sql\n*.yaml\n*.yml"
+        with:
+          sizes: >
+            {
+              "0": "XS",
+              "100": "S",
+              "500": "M",
+              "1000": "L",
+              "1500": "XL",
+              "2500": "XXL"
+            }
