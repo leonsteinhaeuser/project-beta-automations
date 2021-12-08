@@ -59,7 +59,7 @@ jobs:
   issue_opened_or_reopened:
     name: issue_opened_or_reopened
     runs-on: ubuntu-latest
-    if: github.event_name == 'issues' && github.event.action == 'opened' || github.event.action == 'reopened'
+    if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
     steps:
       - name: 'Move issue to "Todo"'
         uses: leonsteinhaeuser/project-beta-automations@v1.0.2
@@ -87,7 +87,7 @@ jobs:
   pr_opened_or_reopened_or_reviewrequested:
     name: pr_opened_or_reopened_or_reviewrequested
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'review_requested'
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'review_requested')
     steps:
       - name: 'Move PR to "In Progress"'
         uses: leonsteinhaeuser/project-beta-automations@v1.0.2
