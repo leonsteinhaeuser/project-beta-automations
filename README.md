@@ -21,7 +21,7 @@ Since the issues and pull requests from this repository are also managed by this
 | `organization`     | false    | The GitHub organization that owns the projectboard. Either a user or an organization must be specified. |
 | `project_id`       | true     | The projectboard id. |
 | `resource_node_id` | true     | The id of the resource node. |
-| `status_value`     | true     | The status value to set. Must be one of the values defined in your project board **Status field settings**. |
+| `status_value`     | false    | The status value to set. Must be one of the values defined in your project board **Status field settings**. If left unspecified, new items are added without an explicit status, and existing items are left alone. |
 
 ## Getting started
 
