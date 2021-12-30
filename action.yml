@@ -23,7 +23,7 @@ inputs:
     default: ""
   status_value:
     description: 'Specifies the destination card to which the issue or pull request should be moved. The value must be of type string. Example: "Todo"'
-    required: true
+    required: false
     default: ""
 runs:
   using: "composite"

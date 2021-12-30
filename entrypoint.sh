@@ -12,15 +12,21 @@ source gh_api_lib.sh
 getProject $organization_name $organization_project_id
 
 PROJECT_ID=$(extractProjectID)
-
 ITEM_ID=$(getItemID $PROJECT_ID $resource_id)
+
+echo "PROJECT_ID: $PROJECT_ID"
+echo "ITEM_ID: $ITEM_ID"
+
+# Exit early without updating status if no status specified.
+if [ -z "$status_value" ]; then
+  exit 0
+fi
 
 STATUS_FIELD_ID=$(extractStatusFieldID)
 # select field values
 status_value_OPTION_ID=$(extractStatusFieldNodeSettingsByValue "$status_value")
 
-echo "PROJECT_ID: $PROJECT_ID"
-echo "ITEM_ID: $ITEM_ID"
+
 echo "STATUS_FIELD_ID: $STATUS_FIELD_ID"
 echo "status_value_OPTION_ID: $status_value_OPTION_ID"
 
