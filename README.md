@@ -69,7 +69,7 @@ jobs:
     if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
     steps:
       - name: Move issue to ${{ env.todo }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.2
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.3
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
@@ -83,7 +83,7 @@ jobs:
     if: github.event_name == 'issues' && github.event.action == 'closed'
     steps:
       - name: Moved issue to ${{ env.done }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.2
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.3
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
@@ -97,7 +97,7 @@ jobs:
     if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'review_requested')
     steps:
       - name: Move PR to ${{ env.in_progress }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.2
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.3
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
@@ -111,7 +111,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     steps:
       - name: Move PR to ${{ env.done }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.2
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.3
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
