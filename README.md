@@ -22,6 +22,8 @@ Since the issues and pull requests from this repository are also managed by this
 | `project_id`       | true     | The projectboard id. |
 | `resource_node_id` | true     | The id of the resource node. |
 | `status_value`     | false    | The status value to set. Must be one of the values defined in your project board **Status field settings**. If left unspecified, new items are added without an explicit status, and existing items are left alone. |
+| `operation_mode`   | true     | The operation mode to use. Must be one of `custom_field`, `status`. Defaults to: `status` |
+| `custom_field_values` | false | Provides the possibility to change custom fields. To be applied the **operation_mode** must be set to `custom_field`. For the json definition refer to [JSON-Definition](#JSON-Definition) |
 
 ## Getting started
 
@@ -120,6 +122,37 @@ jobs:
           resource_node_id: ${{ github.event.pull_request.node_id }}
           status_value: ${{ env.done }} # Target status
 ```
+
+## JSON-Definition
+
+A single json object is defined as follows:
+
+```json
+{
+  "name": "Sample Text Field", # defines the name of the custom field
+  "type": "text", # can be: text, number, date, single_select, iteration
+  "value": "High" # defines the value to set (string)
+}
+```
+
+The json definition that must be passed to the `custom_field_values` argument looks like:
+
+```json
+[
+  {
+    "name": "Priority",
+    "type": "single_select",
+    "value": "High"
+  }
+  {
+    "name": "Context",
+    "type": "text",
+    "value": "Just a random text"
+  }
+]
+```
+
+A detailed example can be found inside the [test.sh](test.sh) file.
 
 ## Detailed example
 
