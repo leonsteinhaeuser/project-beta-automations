@@ -47,6 +47,9 @@ inputs:
         }
       ]'
     required: false
+branding:
+  icon: 'terminal'
+  color: 'blue'
 runs:
   using: "composite"
   steps:
