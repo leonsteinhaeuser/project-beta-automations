@@ -25,13 +25,13 @@ function getOrganizationProject() {
 
 # extractOrganizationProjectID returns the project id
 function extractOrganizationProjectID() {
-    echo $(jq '.data.organization.projectNext.id' $TMP_STORE_LOCATION | sed -e "s+\"++g")
+    jq '.data.organization.projectNext.id' $TMP_STORE_LOCATION | sed -e "s+\"++g"
 }
 
 # extractOrganizationFieldID returns the field id
 function extractOrganizationFieldID() {
     local fieldName=$1
-    echo $(jq '.data.organization.projectNext.fields.nodes[]' | select(.name== "$fieldName") $TMP_STORE_LOCATION | sed -e "s+\"++g")
+    jq -r ".data.organization.projectNext.fields.nodes[] | select(.name== \"$fieldName\").id" $TMP_STORE_LOCATION
 }
 
 # extractOrganizationFieldNodeIterationSettingValue returns the field node setting value id
