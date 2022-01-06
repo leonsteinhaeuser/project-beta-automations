@@ -100,7 +100,7 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.gh_token }}
       shell: bash
-      run: "${{ github.action_path }}/entrypoint.sh \"user\" \"status\" \"${{ inputs.organization }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.status_value }}\""
+      run: "${{ github.action_path }}/entrypoint.sh \"user\" \"status\" \"${{ inputs.user }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.status_value }}\""
 
     - name: Execute Custom Field User automation
       if: inputs.user != '' && inputs.operation_mode == 'status'
@@ -108,4 +108,4 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.gh_token }}
       shell: bash
-      run: "${{ github.action_path }}/entrypoint.sh \"user\" \"custom_field\" \"${{ inputs.organization }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.custom_field_values }}\""
+      run: "${{ github.action_path }}/entrypoint.sh \"user\" \"custom_field\" \"${{ inputs.user }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.custom_field_values }}\""
