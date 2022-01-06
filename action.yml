@@ -109,7 +109,7 @@ runs:
       run: "${{ github.action_path }}/entrypoint.sh \"user\" \"status\" \"${{ inputs.user }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.status_value }}\""
 
     - name: Execute Custom Field User automation
-      if: inputs.user != '' && inputs.operation_mode == 'status'
+      if: inputs.user != '' && inputs.operation_mode == 'custom_field'
       working-directory: ${{ github.action_path }}
       env:
         GITHUB_TOKEN: ${{ inputs.gh_token }}
