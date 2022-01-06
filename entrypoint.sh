@@ -71,8 +71,9 @@ function updateOrganizationScope() {
                             log="$log\n$response\n"
                             ;;
                         "number")
-                            log="$log\nUpdating number field: $nameField with value: $valueField"
-                            response=$(updateTextField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID "$valueField")
+                            valueFieldWithoutQuotes=$(echo $valueField | sed 's/\"//g')
+                            log="$log\nUpdating number field: $nameField with value: $valueFieldWithoutQuotes"
+                            response=$(updateTextField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID "$valueFieldWithoutQuotes")
                             log="$log\n$response\n"
                             ;;
                         "date")
