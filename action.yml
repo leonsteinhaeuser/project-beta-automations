@@ -53,10 +53,6 @@ branding:
 runs:
   using: "composite"
   steps:
-    - name: "Print custom field values"
-      shell: bash
-      run: echo "${{ inputs.custom_field_values }}"
-
     - name: "Authenticate gh cli"
       shell: bash
       run: echo "${{ inputs.gh_token }}" | gh auth login --with-token
