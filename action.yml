@@ -64,7 +64,7 @@ runs:
         script: |
           core.setFailed('user and organization field is set. Only one is supported.')
 
-    - name: "Check if operation_mode is set and custom_field_values is not nil"
+    - name: "Check if operation_mode is set and custom_field_values is not null"
       if: inputs.operation_mode == 'custom_field' && inputs.custom_field_values == ''
       uses: actions/github-script@v3
       with:
