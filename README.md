@@ -22,7 +22,7 @@ Since the issues and pull requests from this repository are also managed by this
 | `project_id`       | true     | The projectboard id. |
 | `resource_node_id` | true     | The id of the resource node. |
 | `status_value`     | false    | The status value to set. Must be one of the values defined in your project board **Status field settings**. If left unspecified, new items are added without an explicit status, and existing items are left alone. |
-| `operation_mode`   | true     | The operation mode to use. Must be one of `custom_field`, `status`. Defaults to: `status` |
+| `operation_mode`   | false     | The operation mode to use. Must be one of `custom_field`, `status`. Defaults to: `status` |
 | `custom_field_values` | false | Provides the possibility to change custom fields. To be applied the **operation_mode** must be set to `custom_field`. For the json definition refer to [JSON-Definition](#JSON-Definition) |
 
 ## Getting started
