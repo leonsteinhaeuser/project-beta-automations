@@ -32,7 +32,7 @@ inputs:
       The value can be one of the following:
       - custom_field
       - status
-    required: true
+    required: false
     default: "status"
   custom_field_values:
     description: |
