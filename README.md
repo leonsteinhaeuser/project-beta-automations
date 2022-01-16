@@ -1,6 +1,6 @@
 # project-beta-automations
 
-This repository provides the ability to automate GitHub issues and pull requests for [Github Projects (Beta)](https://docs.github.com/en/issues/trying-out-the-new-projects-experience/about-projects). To do this, it automates the **Status** field to put issues and pull requests in the desired status, and therefore the desired column in the Board view. If the issue or pull request is not already in the Project, it will be added.
+This repository provides the ability to automate GitHub issues and pull requests for [Github Projects (Beta)](https://docs.github.com/en/issues/trying-out-the-new-projects-experience/about-projects). To do this, it automates the **Status** and user-defined fields to put issues and pull requests into the desired status, and therefore the desired column in the Board view. If the issue or pull request does not already exist in the project, it will be added.
 
 Note: GITHUB_TOKEN does not have the necessary scopes to access projects (beta).
 You must create a token with ***org:write*** scope and save it as a secret in your repository or organization.
@@ -33,7 +33,7 @@ The following example assumes that you have a project board with the following c
 - **In Progress**
 - **Done**
 
-Before we start to automate the project board, we need to define a workflow that matches our requirement. The following table defines a set of actions to automate the board.
+Before we start to automate the project board, we need to decide whether we want to manage the **Status** field using this action or the workflow definition of the project board. Keep in mind that until now there is no way to automatically add issues or pull requests to the project board using the provided workflow functionality by GitHub. The next example assumes that you decided to use this action to manage the **Status** field.
 
 | Current Status | Target Status   | Event name  | GitHub event  | Description |
 | -------------- | --------------- | ----- | ------------- | ----------- |
@@ -158,6 +158,107 @@ Example:
 
 ```yaml
 '[{\"name\": \"Priority\",\"type\": \"text\",\"value\": \"uuid1\"},{\"name\": \"Number\",\"type\": \"number\",\"value\": \"100\"},{\"name\": \"Date\",\"type\": \"date\",\"value\": \"2022-01-28T20:02:27.306+01:00\"},{\"name\": \"Single Select\",\"type\": \"single_select\",\"value\": \"Option 1\"},{\"name\": \"Iteration\",\"type\": \"iteration\",\"value\": \"Iteration 1\"}]'
+```
+
+The following example assumes that your project has the following fields defined:
+
+- `Priority`: As *text* field
+- `Number`: As *number* field
+- `Date`: As *date* field
+- `Single Select`: As *single_select* field with options:
+  - `Option 1`
+  - `Option 2`
+  - `Option 3`
+- `Iteration`: As *iteration* field with iterations:
+  - `Iteration 1`
+  - `Iteration 2`
+  - `Iteration 3`
+
+```yaml
+name: Project automations (organization)
+
+on:
+  issues:
+  pull_request:
+
+env:
+  gh_project_token: ${{ secrets.PAC_TOKEN }}
+  project_id: 1
+  gh_organization: sample-org
+  status_todo: "Todo"
+  status_in_progress: "In Progress"
+  custom_field_values: '[{\"name\": \"Priority\",\"type\": \"text\",\"value\": \"uuid1\"},{\"name\": \"Number\",\"type\": \"number\",\"value\": \"100\"},{\"name\": \"Date\",\"type\": \"date\",\"value\": \"2022-01-28T20:02:27.306+01:00\"},{\"name\": \"Single Select\",\"type\": \"single_select\",\"value\": \"Option 1\"},{\"name\": \"Iteration\",\"type\": \"iteration\",\"value\": \"Iteration 1\"}]'
+
+jobs:
+  issue_opened_or_reopened:
+    name: issue_opened_or_reopened
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
+    steps:
+      - name: 'Move issue to ${{ env.status_todo }}'
+        uses: leonsteinhaeuser/project-beta-automations@v1.1.0-alpha.2
+        env:
+          DEBUG_LOG: "true"
+        with:
+          gh_token: ${{ env.gh_project_token }}
+          organization: ${{ env.gh_organization }}
+          project_id: ${{ env.project_id }}
+          resource_node_id: ${{ github.event.issue.node_id }}
+          status_value: ${{ env.status_todo }}
+
+  issue_project_custom_field_update:
+    name: issue_opened_or_reopened
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
+    needs:
+      - issue_opened_or_reopened
+    steps:
+      - name: 'Modify custom fields'
+        uses: leonsteinhaeuser/project-beta-automations@v1.1.0-alpha.2
+        env:
+          DEBUG_LOG: "true"
+        with:
+          gh_token: ${{ env.gh_project_token }}
+          organization: ${{ env.gh_organization }}
+          project_id: ${{ env.project_id }}
+          resource_node_id: ${{ github.event.issue.node_id }}
+          operation_mode: custom_field
+          custom_field_values: ${{ env.custom_field_values }}
+
+  pr_opened_or_reopened:
+    name: pr_opened_or_reopened
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
+    steps:
+      - name: 'Move PR to ${{ env.status_in_progress }}'
+        uses: leonsteinhaeuser/project-beta-automations@v1.1.0-alpha.2
+        env:
+          DEBUG_LOG: "true"
+        with:
+          gh_token: ${{ env.gh_project_token }}
+          organization: ${{ env.gh_organization }}
+          project_id: ${{ env.project_id }}
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+          status_value: ${{ env.status_in_progress }}
+
+  pr_custom_field_update_1:
+    name: pr_custom_field_update_1 from env
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs:
+      - pr_opened_or_reopened
+    steps:
+      - name: 'Modify custom fields'
+        uses: leonsteinhaeuser/project-beta-automations@v1.1.0-alpha.2
+        env:
+          DEBUG_LOG: "true"
+        with:
+          gh_token: ${{ env.gh_project_token }}
+          organization: ${{ env.gh_organization }}
+          project_id: ${{ env.project_id }}
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+          operation_mode: custom_field
+          custom_field_values: ${{ env.custom_field_values }}
 ```
 
 ## Detailed example
