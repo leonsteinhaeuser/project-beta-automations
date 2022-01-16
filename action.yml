@@ -25,6 +25,24 @@ inputs:
     description: 'Specifies the destination card to which the issue or pull request should be moved. The value must be of type string. Example: "Todo"'
     required: false
     default: ""
+  operation_mode:
+    description: |
+      Specifies the operation mode. 
+      The value must be of type string.
+      The value can be one of the following:
+      - custom_field
+      - status
+    required: false
+    default: "status"
+  custom_field_values:
+    description: |
+      Specifies the custom field values to be set on the issue or pull request. 
+      The value must be an array of objects. 
+      Example: '[{\"name\": \"Priority\",\"type\": \"text\",\"value\": \"uuid1\"},{\"name\": \"Severity\",\"type\": \"text\",\"value\": \"uuid2\"},{\"name\": \"Number\",\"type\": \"number\",\"value\": \"100\"},{\"name\": \"Date\",\"type\": \"date\",\"value\": \"2022-01-28T20:02:27.306+01:00\"},{\"name\": \"Single Select\",\"type\": \"single_select\",\"value\": \"Option 1\"},{\"name\": \"Iteration\",\"type\": \"iteration\",\"value\": \"Iteration 1\"}]'
+    required: false
+branding:
+  icon: 'terminal'
+  color: 'blue'
 runs:
   using: "composite"
   steps:
@@ -46,18 +64,43 @@ runs:
         script: |
           core.setFailed('user and organization field is set. Only one is supported.')
 
-    - name: "Execute Organization automation"
-      if: inputs.organization != ''
-      working-directory: ${{ github.action_path }}
-      env:
-        GITHUB_TOKEN: ${{ inputs.gh_token }}
-      shell: bash
-      run: "${{ github.action_path }}/entrypoint.sh \"${{ inputs.organization }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.status_value }}\""
+    - name: "Check if operation_mode is set and custom_field_values is not null"
+      if: inputs.operation_mode == 'custom_field' && inputs.custom_field_values == ''
+      uses: actions/github-script@v3
+      with:
+        script: |
+          core.setFailed('operation mode is set to custom_field but custom_field_values is not set.')
 
-    - name: "Execute User automation"
-      if: inputs.user != ''
+    # execute organization script
+    - name: Execute Status Organization automation
+      if: inputs.organization != '' && inputs.operation_mode == 'status'
       working-directory: ${{ github.action_path }}
       env:
         GITHUB_TOKEN: ${{ inputs.gh_token }}
       shell: bash
-      run: "${{ github.action_path }}/entrypoint_user.sh \"${{ inputs.user }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.status_value }}\""
+      run: "${{ github.action_path }}/entrypoint.sh \"organization\" \"status\" \"${{ inputs.organization }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.status_value }}\""
+
+    - name: Execute Custom Field Organization automation
+      if: inputs.organization != '' && inputs.operation_mode == 'custom_field'
+      working-directory: ${{ github.action_path }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.gh_token }}
+      shell: bash
+      run: "${{ github.action_path }}/entrypoint.sh \"organization\" \"custom_field\" \"${{ inputs.organization }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.custom_field_values }}\""
+
+    # execute user script
+    - name: Execute Status User automation
+      if: inputs.user != '' && inputs.operation_mode == 'status'
+      working-directory: ${{ github.action_path }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.gh_token }}
+      shell: bash
+      run: "${{ github.action_path }}/entrypoint.sh \"user\" \"status\" \"${{ inputs.user }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.status_value }}\""
+
+    - name: Execute Custom Field User automation
+      if: inputs.user != '' && inputs.operation_mode == 'custom_field'
+      working-directory: ${{ github.action_path }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.gh_token }}
+      shell: bash
+      run: "${{ github.action_path }}/entrypoint.sh \"user\" \"custom_field\" \"${{ inputs.user }}\" \"${{ inputs.project_id }}\" \"${{ inputs.resource_node_id }}\" \"${{ inputs.custom_field_values }}\""

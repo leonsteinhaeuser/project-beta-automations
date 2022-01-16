@@ -22,6 +22,8 @@ Since the issues and pull requests from this repository are also managed by this
 | `project_id`       | true     | The projectboard id. |
 | `resource_node_id` | true     | The id of the resource node. |
 | `status_value`     | false    | The status value to set. Must be one of the values defined in your project board **Status field settings**. If left unspecified, new items are added without an explicit status, and existing items are left alone. |
+| `operation_mode`   | false     | The operation mode to use. Must be one of `custom_field`, `status`. Defaults to: `status` |
+| `custom_field_values` | false | Provides the possibility to change custom fields. To be applied the **operation_mode** must be set to `custom_field`. For the json definition refer to [JSON-Definition](#JSON-Definition) |
 
 ## Getting started
 
@@ -69,7 +71,7 @@ jobs:
     if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
     steps:
       - name: Move issue to ${{ env.todo }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.3
+        uses: leonsteinhaeuser/project-beta-automations@v1.1.0-alpha.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
@@ -83,7 +85,7 @@ jobs:
     if: github.event_name == 'issues' && github.event.action == 'closed'
     steps:
       - name: Moved issue to ${{ env.done }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.3
+        uses: leonsteinhaeuser/project-beta-automations@v1.1.0-alpha.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
@@ -97,7 +99,7 @@ jobs:
     if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'review_requested')
     steps:
       - name: Move PR to ${{ env.in_progress }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.3
+        uses: leonsteinhaeuser/project-beta-automations@v1.1.0-alpha.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
@@ -111,7 +113,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     steps:
       - name: Move PR to ${{ env.done }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.3
+        uses: leonsteinhaeuser/project-beta-automations@v1.1.0-alpha.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
@@ -121,6 +123,81 @@ jobs:
           status_value: ${{ env.done }} # Target status
 ```
 
+## JSON-Definition
+
+A single json object is defined as follows:
+
+```json
+{
+  "name": "Sample Text Field", # defines the name of the custom field
+  "type": "text", # can be one of: text, number, date, single_select, iteration
+  "value": "High" # defines the value to set (string)
+}
+```
+
+The json definition that must be passed to the `custom_field_values` argument looks like:
+
+```json
+[
+  {
+    "name": "Priority",
+    "type": "single_select",
+    "value": "High"
+  }
+  {
+    "name": "Context",
+    "type": "text",
+    "value": "Just a random text"
+  }
+]
+```
+
+A detailed example can be found inside the [test.sh](test.sh) file. Note that json definition must be enclosed in an array and escaped with double quotes and backslashes.
+
+Example:
+
+```yaml
+'[{\"name\": \"Priority\",\"type\": \"text\",\"value\": \"uuid1\"},{\"name\": \"Number\",\"type\": \"number\",\"value\": \"100\"},{\"name\": \"Date\",\"type\": \"date\",\"value\": \"2022-01-28T20:02:27.306+01:00\"},{\"name\": \"Single Select\",\"type\": \"single_select\",\"value\": \"Option 1\"},{\"name\": \"Iteration\",\"type\": \"iteration\",\"value\": \"Iteration 1\"}]'
+```
+
 ## Detailed example
 
 Since this repository is also covered by this automation, you can take a look at the definition within the [project-automation.yml](.github/workflows/project_automations.yml) file to check how it is defined here.
+
+## Debugging
+
+Since debugging is key when tracing a bug, we decided to provide a two step debugging process. To enable the different debugging outputs, you can set the following environment variables:
+
+| Variable         | Option | Default behaviour | Description |
+| ---------------- | -------| ----------------- | -------------------------------------------------- |
+| `DEBUG_COMMANDS` | `true` | Do nothing        | Enables the stacktrace for command executions.     |
+| `DEBUG_LOG`      | `true` | Do nothing        | Prints out the responses produced by the commands. |
+
+Example workflow definition:
+
+```yaml
+env:
+  todo: Todo ✏️
+  gh_project_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+  user: sample-user
+  project_id: 1
+
+jobs:
+  issue_opened:
+    name: issue_opened
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    steps:
+      - name: Move issue to ${{ env.todo }}
+        uses: leonsteinhaeuser/project-beta-automations@v1.1.0-alpha.1
+        env:
+          DEBUG_COMMANDS: true
+          DEBUG_LOG: true
+        with:
+          gh_token: ${{ env.gh_project_token }}
+          user: ${{ env.user }}
+          # organization: sample-org
+          project_id: ${{ env.project_id }}
+          resource_node_id: ${{ github.event.issue.node_id }}
+          status_value: ${{ env.todo }}
+```
