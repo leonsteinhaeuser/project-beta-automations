@@ -13,6 +13,9 @@ ENTRYPOINT_TYPE=status
 RESOURCE_NODE_VALUE=Done
 $ENTRYPOINT_SCRIPT "$ENTRYPOINT_MODE" "$ENTRYPOINT_TYPE" "$ORG_OR_USER_NAME" "$PROJECT_ID" "$RESOURCE_NODE_ID" "$RESOURCE_NODE_VALUE"
 
+# change the status of a pr or issue to ''
+$ENTRYPOINT_SCRIPT "$ENTRYPOINT_MODE" "$ENTRYPOINT_TYPE" "$ORG_OR_USER_NAME" "$PROJECT_ID" "$RESOURCE_NODE_ID"
+
 # change the value of custom fields
 date=$(date -d "+10 days" --rfc-3339=ns | sed 's/ /T/; s/\(\....\).*\([+-]\)/\1\2/g')
 uuid1=$(uuidgen)

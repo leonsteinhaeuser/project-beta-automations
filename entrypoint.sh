@@ -46,23 +46,23 @@ if [ -z "$ENTRYPOINT_MODE" ]; then
     exit 1
 fi
 if [ -z "$ENTRYPOINT_TYPE" ]; then
-    echo "Parameter 1: ENTRYPOINT_TYPE is not set"
+    echo "Parameter 2: ENTRYPOINT_TYPE is not set"
     exit 1
 fi
 if [ -z "$ORG_OR_USER_NAME" ]; then
-    echo "Parameter 1: ORG_OR_USER_NAME is not set"
+    echo "Parameter 3: ORG_OR_USER_NAME is not set"
     exit 1
 fi
 if [ -z "$PROJECT_ID" ]; then
-    echo "Parameter 1: PROJECT_ID is not set"
+    echo "Parameter 4: PROJECT_ID is not set"
     exit 1
 fi
 if [ -z "$RESOURCE_NODE_ID" ]; then
-    echo "Parameter 1: RESOURCE_NODE_ID is not set"
+    echo "Parameter 5: RESOURCE_NODE_ID is not set"
     exit 1
 fi
-if [ -z "$RESOURCE_NODE_VALUE" ]; then
-    echo "Parameter 1: RESOURCE_NODE_VALUE is not set"
+if [ "$ENTRYPOINT_TYPE" == "custom_field" ] && [ -z "$RESOURCE_NODE_VALUE" ]; then
+    echo "Parameter 6: ENTRYPOINT_TYPE=\"custom_field\" has beend specified but RESOURCE_NODE_VALUE is not set"
     exit 1
 fi
 
