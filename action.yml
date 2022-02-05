@@ -66,7 +66,7 @@ runs:
     - name: "Authenticate gh cli Github App"
       if: inputs.gh_app_secret_key != '' && inputs.gh_app_ID != '' && inputs.gh_app_installation_ID
       shell: bash
-      run: "${{ github.action_path }}/ghapp_credential_helper.sh \"${{ inputs.gh_app_secret_key }}\" \"${{ inputs.gh_app_ID }}\" \"${{ inputs.gh_app_installation_ID }}\" | gh auth login --with-token"
+      run: "${{ github.action_path }}/gh_app_credential_helper.sh \"${{ inputs.gh_app_secret_key }}\" \"${{ inputs.gh_app_ID }}\" \"${{ inputs.gh_app_installation_ID }}\" | gh auth login --with-token"
 
     - name: "Authenticate gh cli PAT"
       if: inputs.gh_token != ''
