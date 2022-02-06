@@ -1,5 +1,13 @@
 # project-beta-automations
 
+[![latest release](https://img.shields.io/github/v/release/leonsteinhaeuser/project-beta-automations)](https://img.shields.io/github/v/release/leonsteinhaeuser/project-beta-automations)
+[![release date](https://img.shields.io/github/release-date/leonsteinhaeuser/project-beta-automations)](https://img.shields.io/github/release-date/leonsteinhaeuser/project-beta-automations)
+[![commits since release](https://img.shields.io/github/commits-since/leonsteinhaeuser/project-beta-automations/latest)](https://img.shields.io/github/commits-since/leonsteinhaeuser/project-beta-automations/latest)
+[![open: bugs](https://img.shields.io/github/issues/leonsteinhaeuser/project-beta-automations/bug)](https://img.shields.io/github/issues/leonsteinhaeuser/project-beta-automations/bug)
+[![open: feature requests](https://img.shields.io/github/issues/leonsteinhaeuser/project-beta-automations/feature%20request)](https://img.shields.io/github/issues/leonsteinhaeuser/project-beta-automations/feature%20request)
+[![issues closed](https://img.shields.io/github/issues-closed/leonsteinhaeuser/project-beta-automations)](https://img.shields.io/github/issues-closed/leonsteinhaeuser/project-beta-automations)
+[![license](https://img.shields.io/github/license/leonsteinhaeuser/project-beta-automations)](https://img.shields.io/github/license/leonsteinhaeuser/project-beta-automations)
+
 This repository provides the ability to automate GitHub issues and pull requests for [Github Projects (Beta)](https://docs.github.com/en/issues/trying-out-the-new-projects-experience/about-projects). To do this, it automates the **Status** and user-defined fields to put issues and pull requests into the desired status, and therefore the desired column in the Board view. If the issue or pull request does not already exist in the project, it will be added.
 
 Note: GITHUB_TOKEN does not have the necessary scopes to access projects (beta).
