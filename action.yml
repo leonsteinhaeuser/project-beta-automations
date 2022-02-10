@@ -2,8 +2,20 @@ name: "project beta automations"
 description: 'GitHub beta projects status field automation for Issues and Pull Requests'
 inputs:
   gh_token:
-    description: 'Permission token that grants permission to the GitHub API.'
-    required: true
+    description: 'Permission token that grants permission to the GitHub API. (Toke or App config is required)'
+    required: false
+    default: ""
+  gh_app_secret_key:
+    description: 'Github App secret RSA key used to sign App JWT tokens'
+    required: false
+    default: ""
+  gh_app_ID:
+    description: 'Github App ID used to authenticate againts the API'
+    required: false
+    default: ""
+  gh_app_installation_ID:
+    description: 'Github App installation ID used to retrive installation token'
+    required: false
     default: ""
   organization:
     description: 'Organization the project is stored in'
@@ -46,7 +58,18 @@ branding:
 runs:
   using: "composite"
   steps:
-    - name: "Authenticate gh cli"
+    - name: "Error missing auth conf"
+      if: inputs.gh_app_secret_key == '' && inputs.gh_app_ID == '' && inputs.gh_token == ''
+      shell: bash
+      run: echo "No GH Auth method configured, provide PAT or App ID/Key"; exit 1
+
+    - name: "Authenticate gh cli Github App"
+      if: inputs.gh_app_secret_key != '' && inputs.gh_app_ID != '' && inputs.gh_app_installation_ID
+      shell: bash
+      run: "${{ github.action_path }}/gh_app_credential_helper.sh \"${{ inputs.gh_app_secret_key }}\" \"${{ inputs.gh_app_ID }}\" \"${{ inputs.gh_app_installation_ID }}\" | gh auth login --with-token"
+
+    - name: "Authenticate gh cli PAT"
+      if: inputs.gh_token != ''
       shell: bash
       run: echo "${{ inputs.gh_token }}" | gh auth login --with-token
 
