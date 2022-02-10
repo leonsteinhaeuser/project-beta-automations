@@ -4,24 +4,18 @@ on:
   issues:
     types:
       - opened
-      - reopened
-      - closed
   pull_request:
     types:
       - opened
-      - ready_for_review
-      - reopened
-      - review_requested
-      - closed
 
 jobs:
-  issue_opened_and_reopened:
-    name: issue_opened_and_reopened
+  issue_opened:
+    name: issue_opened
     runs-on: ubuntu-latest
-    if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
+    if: github.event_name == 'issues' && github.event.action == 'opened'
     steps:
       - name: 'Move issue to Todo'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.2
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.0
         with:
           gh_token: ${{ secrets.PROJECT_PERMISSIONS_TOKEN }}
           user: leonsteinhaeuser
@@ -29,58 +23,16 @@ jobs:
           resource_node_id: ${{ github.event.issue.node_id }}
           status_value: "Todo"
 
-  issue_closed:
-    name: issue_closed
+  pr_opened:
+    name: pr_opened
     runs-on: ubuntu-latest
-    if: github.event_name == 'issues' && github.event.action == 'closed'
-    steps:
-      - name: 'Moved issue to Closed'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.2
-        with:
-          gh_token: ${{ secrets.PROJECT_PERMISSIONS_TOKEN }}
-          user: leonsteinhaeuser
-          project_id: ${{ secrets.PROJECT_ID }}
-          resource_node_id: ${{ github.event.issue.node_id }}
-          status_value: "Done"
-
-  pr_opened_reopened_review_requested:
-    name: pr_opened_reopened_review_requested
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'review_requested')
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
     steps:
       - name: 'Move PR to "In Progress"'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.2
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.0
         with:
           gh_token: ${{ secrets.PROJECT_PERMISSIONS_TOKEN }}
           user: leonsteinhaeuser
           project_id: ${{ secrets.PROJECT_ID }}
           resource_node_id: ${{ github.event.pull_request.node_id }}
           status_value: "In Progress"
-
-  pr_review_required:
-    name: pr_ready_for_review
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'ready_for_review'
-    steps:
-      - name: 'Move PR to "Review Required"'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.2
-        with:
-          gh_token: ${{ secrets.PROJECT_PERMISSIONS_TOKEN }}
-          user: leonsteinhaeuser
-          project_id: ${{ secrets.PROJECT_ID }}
-          resource_node_id: ${{ github.event.pull_request.node_id }}
-          status_value: "Review Required"
-
-  pr_closed:
-    name: pr_closed
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    steps:
-      - name: 'Move PR to "Closed"'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.2
-        with:
-          gh_token: ${{ secrets.PROJECT_PERMISSIONS_TOKEN }}
-          user: leonsteinhaeuser
-          project_id: ${{ secrets.PROJECT_ID }}
-          resource_node_id: ${{ github.event.pull_request.node_id }}
-          status_value: "Done"
