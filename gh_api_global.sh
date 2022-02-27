@@ -22,7 +22,7 @@ function getItemID() {
 #   1: project id
 #   2: project item id
 #   3: field id
-#   4: field option id
+#   4: field option string (id as string)
 function updateSingleSelectField() {
     local project_id=$1
     local item_id=$2
@@ -33,7 +33,7 @@ function updateSingleSelectField() {
         $project: ID!
         $item: ID!
         $fieldid: ID!
-        $fieldOption: ID!
+        $fieldOption: String!
     ) {
         updateProjectNextItemField(
             input: {
