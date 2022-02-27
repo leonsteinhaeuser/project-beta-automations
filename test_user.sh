@@ -20,6 +20,7 @@ $ENTRYPOINT_SCRIPT "$ENTRYPOINT_MODE" "$ENTRYPOINT_TYPE" "$ORG_OR_USER_NAME" "$P
 date=$(date -d "+10 days" --rfc-3339=ns | sed 's/ /T/; s/\(\....\).*\([+-]\)/\1\2/g')
 uuid1=$(uuidgen)
 uuid2=$(uuidgen)
+random_number=$(( $RANDOM % 2500 ))
 custom_fields="[
     {
         \"name\": \"Priority\",
@@ -27,14 +28,9 @@ custom_fields="[
         \"value\": \"$uuid1\"
     },
     {
-        \"name\": \"Severity\",
-        \"type\": \"text\",
-        \"value\": \"$uuid2\"
-    },
-    {
         \"name\": \"Number\",
         \"type\": \"number\",
-        \"value\": \"1000000\",
+        \"value\": \"$random_number\"
     },
     {
         \"name\": \"Date\",
@@ -49,7 +45,7 @@ custom_fields="[
     {
         \"name\": \"Iteration\",
         \"type\": \"iteration\",
-        \"value\": \"Iteration 1\"
+        \"value\": \"Iteration 3\"
     }
 ]"
 
