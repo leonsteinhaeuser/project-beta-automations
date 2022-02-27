@@ -15,9 +15,13 @@ You must create a token with ***org:write*** scope and save it as a secret in yo
 For more information, see [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
 > :warning: The GitHub API change of 2022-02-23 results in an error message requiring an upgrade to a new version.
+>
 > What is the problem?
+> 
 > As of 2022-02-23 , the GitHub API requires that the value of a single select/iteration field be a string instead of an ID!
+>
 > This causes the automation to throw an error message.
+>
 > https://github.blog/changelog/2022-02-23-the-new-github-issues-february-23rd-update/
 
 ## Project board
