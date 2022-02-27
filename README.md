@@ -92,7 +92,7 @@ jobs:
     if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
     steps:
       - name: Move issue to ${{ env.todo }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.2.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
@@ -106,7 +106,7 @@ jobs:
     if: github.event_name == 'issues' && github.event.action == 'closed'
     steps:
       - name: Moved issue to ${{ env.done }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.2.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
@@ -120,7 +120,7 @@ jobs:
     if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'review_requested')
     steps:
       - name: Move PR to ${{ env.in_progress }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.2.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
@@ -134,7 +134,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     steps:
       - name: Move PR to ${{ env.done }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.2.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           user: sample-user
@@ -240,7 +240,7 @@ jobs:
     if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
     steps:
       - name: 'Move issue to ${{ env.status_todo }}'
-        uses: leonsteinhaeuser/project-beta-automations@v1.2.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
         env:
           DEBUG_LOG: "true"
         with:
@@ -258,7 +258,7 @@ jobs:
       - issue_opened_or_reopened
     steps:
       - name: 'Modify custom fields'
-        uses: leonsteinhaeuser/project-beta-automations@v1.2.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
         env:
           DEBUG_LOG: "true"
         with:
@@ -275,7 +275,7 @@ jobs:
     if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
     steps:
       - name: 'Move PR to ${{ env.status_in_progress }}'
-        uses: leonsteinhaeuser/project-beta-automations@v1.2.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
         env:
           DEBUG_LOG: "true"
         with:
@@ -293,7 +293,7 @@ jobs:
       - pr_opened_or_reopened
     steps:
       - name: 'Modify custom fields'
-        uses: leonsteinhaeuser/project-beta-automations@v1.2.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
         env:
           DEBUG_LOG: "true"
         with:
@@ -334,7 +334,7 @@ jobs:
     if: github.event_name == 'issues' && github.event.action == 'opened'
     steps:
       - name: Move issue to ${{ env.todo }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.2.0
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
         env:
           DEBUG_COMMANDS: true
           DEBUG_LOG: true
