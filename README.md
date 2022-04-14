@@ -8,7 +8,9 @@
 [![issues closed](https://img.shields.io/github/issues-closed/leonsteinhaeuser/project-beta-automations)](https://img.shields.io/github/issues-closed/leonsteinhaeuser/project-beta-automations)
 [![license](https://img.shields.io/github/license/leonsteinhaeuser/project-beta-automations)](https://img.shields.io/github/license/leonsteinhaeuser/project-beta-automations)
 
-This repository provides the ability to automate GitHub issues and pull requests for [Github Projects (Beta)](https://docs.github.com/en/issues/trying-out-the-new-projects-experience/about-projects). To do this, it automates the **Status** and user-defined fields to put issues and pull requests into the desired status, and therefore the desired column in the Board view. If the issue or pull request does not already exist in the project, it will be added.
+This automation provides the ability to automate issues and pull requests related to [Github Projects (Beta)](https://docs.github.com/en/issues/trying-out-the-new-projects-experience/about-projects).
+If the issue or pull request is not attached to a project, it is automatically added to the project and its desired column. 
+In addition to status automation, this automation also supports custom field management.
 
 Note: GITHUB_TOKEN does not have the necessary scopes to access projects (beta).
 You must create a token with ***org:write*** scope and save it as a secret in your repository or organization.
