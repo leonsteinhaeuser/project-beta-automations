@@ -52,3 +52,24 @@ custom_fields="[
 ENTRYPOINT_TYPE=custom_field
 RESOURCE_NODE_VALUE=$custom_fields
 $ENTRYPOINT_SCRIPT "$ENTRYPOINT_MODE" "$ENTRYPOINT_TYPE" "$ORG_OR_USER_NAME" "$PROJECT_ID" "$RESOURCE_NODE_ID" "$RESOURCE_NODE_VALUE"
+
+
+custom_fields="[
+    {
+        \"name\": \"Iteration\",
+        \"type\": \"iteration\",
+        \"value\": \"@next\"
+    }
+]"
+RESOURCE_NODE_VALUE=$custom_fields
+$ENTRYPOINT_SCRIPT "$ENTRYPOINT_MODE" "$ENTRYPOINT_TYPE" "$ORG_OR_USER_NAME" "$PROJECT_ID" "$RESOURCE_NODE_ID" "$RESOURCE_NODE_VALUE"
+
+custom_fields="[
+    {
+        \"name\": \"Iteration\",
+        \"type\": \"iteration\",
+        \"value\": \"@current\"
+    }
+]"
+RESOURCE_NODE_VALUE=$custom_fields
+$ENTRYPOINT_SCRIPT "$ENTRYPOINT_MODE" "$ENTRYPOINT_TYPE" "$ORG_OR_USER_NAME" "$PROJECT_ID" "$RESOURCE_NODE_ID" "$RESOURCE_NODE_VALUE"
