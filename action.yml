@@ -60,7 +60,7 @@ runs:
   steps:
     - name: "Install the gh cli tool if not installed"
       shell: bash
-      run: ./deps.sh
+      run: ${{ github.action_path }}/deps.sh
 
     - name: "Error missing auth conf"
       if: inputs.gh_app_secret_key == '' && inputs.gh_app_ID == '' && inputs.gh_token == ''
