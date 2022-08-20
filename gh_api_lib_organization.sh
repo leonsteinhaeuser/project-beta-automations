@@ -2,39 +2,67 @@
 
 TMP_STORE_LOCATION=/tmp/api_response.json
 
-# getOrganizationProject queries the github api for the specific project
+# getOrganizationProjectID queries the github api for the specific project uuid
 #   1: organization
 #   2: project id (number)
-function getOrganizationProject() {
+function getOrganizationProjectID() {
     local ORGANIZATION=$1
     local PROJECT_NUMBER=$2
     gh api graphql --header 'GraphQL-Features: projects_next_graphql' -f query='
     query($organization: String!, $number: Int!) {
-        organization(login: $organization){
-            projectNext(number: $number) {
-                id
-                fields(first:20) {
-                    nodes {
-                        id
-                        name
-                        settings
-                    }
-                }
-            }
+      organization(login: $organization){
+        projectV2(number: $number) {
+          id
         }
+      }
     }' -f organization=$ORGANIZATION -F number=$PROJECT_NUMBER > $TMP_STORE_LOCATION
 }
 
-# extractOrganizationProjectID returns the project id
-function extractOrganizationProjectID() {
-    jq '.data.organization.projectNext.id' $TMP_STORE_LOCATION | sed -e "s+\"++g"
+# getOrganizationProjectFields queries the github api for the specific project fields
+#   1: project id (uuid)
+function getOrganizationProjectFields() {
+    local PROJECT_ID=$1
+    gh api graphql -f query='
+      query($projectId: ID!){
+      node(id: $projectId) {
+        ... on ProjectV2 {
+          fields(first: 100) {
+            nodes {
+              ... on ProjectV2Field {
+                id
+                name
+              }
+              ... on ProjectV2IterationField {
+                id
+                name
+                configuration {
+                  iterations {
+                    startDate
+                    id
+                    title
+                  }
+                }
+              }
+              ... on ProjectV2SingleSelectField {
+                id
+                name
+                options {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }' -f projectId=$PROJECT_ID | jq .data.node.fields > $TMP_STORE_LOCATION
 }
 
 # extractOrganizationFieldID returns the field id
 #  1: field name
 function extractOrganizationFieldID() {
     local fieldName=$(echo $1 | sed -e "s+\"++g") # remove quotes
-    jq -r ".data.organization.projectNext.fields.nodes[] | select(.name == \"$fieldName\").id" $TMP_STORE_LOCATION
+    jq -r ".nodes[] | select(.name == \"$fieldName\").id" $TMP_STORE_LOCATION
 }
 
 # extractOrganizationFieldNodeIterationSettingValue returns the field node setting value id
@@ -44,19 +72,19 @@ function extractOrganizationFieldID() {
 # NOTE: If the value is @current or @next, we check the the array of iterations and return the current or next iteration id.
 function extractOrganizationFieldNodeIterationSettingValue() {
     local field_name=$(echo $1 | sed -e "s+\"++g") # remove quotes
-    select_value=$(echo $2 | sed -e "s+\"++g") # remove quotes
+    local select_value=$(echo $2 | sed -e "s+\"++g") # remove quotes
 
-    iterations_for_field=$(jq ".data.organization.projectNext.fields.nodes[] | select(.name==\"$field_name\").settings | fromjson.configuration.iterations[]" $TMP_STORE_LOCATION)
-    dates=$(echo $iterations_for_field | jq -r ".start_date" | sort )
+    iterations_for_field=$(jq ".nodes[] | select(.name==\"$field_name\").configuration.iterations" $TMP_STORE_LOCATION)
+    dates=$(echo $iterations_for_field | jq -r '.[] | .startDate' | sort)
     STRINGTEST=(${dates[@]})
     if [ "$select_value" == "@current" ]; then
-        iteration_selected=${STRINGTEST[0]}
-        echo -e $iterations_for_field | jq "select(.start_date==\"$iteration_selected\") |.id" | sed -e "s+\"++g"
+        CURRENT_ITERATION=${STRINGTEST[0]}
+        echo -e $iterations_for_field | jq -r '.[] | select(.startDate == "'$CURRENT_ITERATION'").id'
     elif [ "$select_value" == "@next" ]; then
-        iteration_selected=${STRINGTEST[1]}
-        echo -e $iterations_for_field | jq "select(.start_date==\"$iteration_selected\") |.id" | sed -e "s+\"++g"
+        NEXT_ITERATION=${STRINGTEST[1]}
+        echo -e $iterations_for_field | jq -r '.[] | select(.startDate == "'$NEXT_ITERATION'").id'
     else
-        echo -e $iterations_for_field | jq "select(.title==\"$select_value\") |.id" | sed -e "s+\"++g"
+        echo -e $iterations_for_field | jq -r ".[] | select(.title==\"$select_value\") | .id"
     fi
 }
 
@@ -65,6 +93,6 @@ function extractOrganizationFieldNodeIterationSettingValue() {
 #   2: select value
 function extractOrganizationFieldNodeSelectSettingValue() {
     local fieldName=$(echo $1 | sed -e "s+\"++g") # remove quotes
-    selectValue=$(echo $2 | sed -e "s+\"++g") # remove quotes
-    jq ".data.organization.projectNext.fields.nodes[] | select(.name == \"$fieldName\").settings | fromjson.options[] | select(.name==\"$selectValue\") |.id" $TMP_STORE_LOCATION | sed -e "s+\"++g"
+    local selectValue=$(echo $2 | sed -e "s+\"++g") # remove quotes
+    jq ".nodes[] | select(.name==\"Status\").options[] | select(.name==\"Done\").id" $TMP_STORE_LOCATION | sed -e "s+\"++g"
 }
