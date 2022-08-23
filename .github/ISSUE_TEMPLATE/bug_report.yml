@@ -43,9 +43,12 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: operation-system
+    id: runners
     attributes:
-      label: What operation system are you using?
+      label: Which github actions runner are you using?
+      description: >
+        Please specify the operating system of your workflow's 
+        [jobs.<job_id>.runs-on](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idruns-on)
       multiple: true
       options:
         - Windows
