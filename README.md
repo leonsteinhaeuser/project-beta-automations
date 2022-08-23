@@ -26,6 +26,10 @@ For more information, see [Creating a personal access token](https://docs.github
 >
 > https://github.blog/changelog/2022-02-23-the-new-github-issues-february-23rd-update/
 
+## V1 vs V2
+
+In June 2022, [GitHub announced a breaking change to the Projects API](https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/). Therefore, the @v1 tag of this action will stop working on October 1, 2022. You can switch to the @v2 tag at any time (by updating the reference in your workflow file).
+
 ## Project board
 
 Since the issues and pull requests from this repository are also managed by this automation, you can take an example from the public project board to see what it looks like.
