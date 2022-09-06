@@ -1,5 +1,5 @@
 name: "project beta automations"
-description: 'This automation provides the ability to automate issues and pull requests related to Github Projects (Beta). If the issue or pull request is not attached to a project, it is automatically added to the project and its desired column. In addition to status automation, this automation also supports custom field management.'
+description: 'GitHub ProjectV2/Project-Beta automation. It supports management of status and custom fields.'
 inputs:
   gh_token:
     description: 'Permission token that grants permission to the GitHub API. (Toke or App config is required)'
