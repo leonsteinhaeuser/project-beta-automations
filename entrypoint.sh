@@ -72,6 +72,8 @@ fi
 #######################################################################################################
 #######################################################################################################
 
+export TMP_STORE_LOCATION="/tmp/api_${ENTRYPOINT_MODE}_response.json"
+
 # load the api libs
 source gh_api_lib_user.sh
 source gh_api_lib_organization.sh
@@ -84,78 +86,12 @@ PROJECT_ITEM_UUID=""
 # stores the log output the script produces
 log=""
 
-function updateOrganizationScope() {
-    case "$ENTRYPOINT_TYPE" in
-        status)
-            STATUS_FIELD_ID=$(extractOrganizationFieldID "Status")
-            STATUS_FIELD_VALUE_ID=$(extractOrganizationFieldNodeSelectSettingValue "Status" "$RESOURCE_NODE_VALUE")
-            response=$(updateSingleSelectField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" "$STATUS_FIELD_ID" "$STATUS_FIELD_VALUE_ID")
-            log="$log\n$response"
-            ;;
-        custom_field)
-            x=0 # counter
-            while true; do
-                nameField=$(echo $RESOURCE_NODE_VALUE | jq ".[$x].name" | sed 's/\"//g')
-                typeField=$(echo $RESOURCE_NODE_VALUE | jq ".[$x].type" | sed 's/\"//g')
-                valueField=$(echo $RESOURCE_NODE_VALUE | jq ".[$x].value")
-                if [ "$nameField" == "null" ] || [ "$valueField" == "null" ]; then
-                    # no more custom fields
-                    break
-                else
-                    local fieldID=$(extractOrganizationFieldID "$nameField")
-                    log="$log\n\n$nameField: $fieldID"
-                    case $typeField in
-                        'text')
-                            log="$log\nUpdating text field: $nameField with value: $valueField"
-                            response=$(updateTextField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID "$valueField")
-                            log="$log\n$response\n"
-                            ;;
-                        "number")
-                            valueFieldWithoutQuotes=$(echo $valueField | sed 's/\"//g')
-                            log="$log\nUpdating number field: $nameField with value: $valueFieldWithoutQuotes"
-                            response=$(updateTextField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID "$valueFieldWithoutQuotes")
-                            log="$log\n$response\n"
-                            ;;
-                        "date")
-                            log="$log\nUpdating date field: $nameField with value: $valueField"
-                            response=$(updateTextField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID "$valueField")
-                            log="$log\n$response\n"
-                            ;;
-                        "single_select")
-                            log="$log\nUpdating single select field: $nameField with value: $valueField"
-                            selectedOption=$(extractOrganizationFieldNodeSelectSettingValue "$nameField" "$valueField")
-                            log="$log\nSingle Select Option: $selectedOption"
-                            response=$(updateSingleSelectField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" "$fieldID" "$selectedOption")
-                            log="$log\n$response\n"
-                            ;;
-                        "iteration")
-                            log="$log\nUpdating iteration field: $nameField with value: $valueField"
-                            iterationFieldNodeID=$(extractOrganizationFieldNodeIterationSettingValue "$nameField" "$valueField")
-                            log="$log\nIteration Node ID: $iterationFieldNodeID"
-                            response=$(updateSingleSelectField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" "$fieldID" "$iterationFieldNodeID")
-                            log="$log\n$response\n"
-                            ;;
-                        *)
-                            echo "Unknown field type: $typeField"
-                            exit -1
-                            ;;
-                    esac
-                fi
-                x=$(( $x + 1 ))
-            done
-            ;;
-        *)
-            echo "Unknown ENTRYPOINT_TYPE: $ENTRYPOINT_TYPE"
-            exit 2
-            ;;
-    esac
-}
 
-function updateUserScope() {
+function updateFieldScope() {
     case "$ENTRYPOINT_TYPE" in
         status)
-            STATUS_FIELD_ID=$(extractUserFieldID "Status")
-            STATUS_FIELD_VALUE_ID=$(extractUserFieldNodeSelectSettingValue "Status" "$RESOURCE_NODE_VALUE")
+            STATUS_FIELD_ID=$(extractFieldID "Status")
+            STATUS_FIELD_VALUE_ID=$(extractFieldNodeSingleSelectSettingValue "Status" "$RESOURCE_NODE_VALUE")
             response=$(updateSingleSelectField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" "$STATUS_FIELD_ID" "$STATUS_FIELD_VALUE_ID")
             log="$log\n$response"
             ;;
@@ -169,7 +105,7 @@ function updateUserScope() {
                     # no more custom fields
                     break
                 else
-                    local fieldID=$(extractUserFieldID "$nameField")
+                    local fieldID=$(extractFieldID "$nameField")
                     log="$log\n\n$nameField: $fieldID"
                     case $typeField in
                         'text')
@@ -180,26 +116,25 @@ function updateUserScope() {
                         "number")
                             valueFieldWithoutQuotes=$(echo $valueField | sed 's/\"//g')
                             log="$log\nUpdating number field: $nameField with value: $valueFieldWithoutQuotes"
-                            response=$(updateTextField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID "$valueFieldWithoutQuotes")
+                            response=$(updateNumberField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID "$valueFieldWithoutQuotes")
                             log="$log\n$response\n"
                             ;;
                         "date")
-                            log="$log\nUpdating date field: $nameField with value: $valueField"
-                            response=$(updateTextField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID "$valueField")
+                            valueFieldWithoutQuotes=$(echo $valueField | sed 's/\"//g')
+                            log="$log\nUpdating date field: $nameField with value: $valueFieldWithoutQuotes"
+                            response=$(updateDateField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID "$valueFieldWithoutQuotes")
                             log="$log\n$response\n"
                             ;;
                         "single_select")
                             log="$log\nUpdating single select field: $nameField with value: $valueField"
-                            selectedOption=$(extractUserFieldNodeSelectSettingValue "$nameField" "$valueField")
-                            log="$log\nSingle Select Option: $selectedOption"
+                            selectedOption=$(extractFieldNodeSingleSelectSettingValue "$nameField" "$valueField")
                             response=$(updateSingleSelectField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" "$fieldID" "$selectedOption")
                             log="$log\n$response\n"
                             ;;
                         "iteration")
                             log="$log\nUpdating iteration field: $nameField with value: $valueField"
-                            iterationFieldNodeID=$(extractUserFieldNodeIterationSettingValue "$nameField" "$valueField")
-                            log="$log\nIteration Node ID: $iterationFieldNodeID"
-                            response=$(updateSingleSelectField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" "$fieldID" "$iterationFieldNodeID")
+                            iterationFieldNodeID=$(extractFieldNodeIterationSettingValue "$nameField" "$valueField")
+                            response=$(updateIterationField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" "$fieldID" "$iterationFieldNodeID")
                             log="$log\n$response\n"
                             ;;
                         *)
@@ -221,20 +156,20 @@ function updateUserScope() {
 # main entrypoint for the application
 case "$ENTRYPOINT_MODE" in
     organization)
-        getOrganizationProject "$ORG_OR_USER_NAME" "$PROJECT_ID"
-        # extract project uuid and assign it to the variable PROJECT_UUID
-        PROJECT_UUID=$(extractOrganizationProjectID)
+        PROJECT_UUID=$(getOrganizationProjectID "$ORG_OR_USER_NAME" "$PROJECT_ID")
+        echo "PROJECT_UUID: $PROJECT_UUID"
+        getOrganizationProjectFields "$PROJECT_UUID"
         PROJECT_ITEM_UUID=$(getItemID $PROJECT_UUID $RESOURCE_NODE_ID)
 
-        updateOrganizationScope
+        updateFieldScope
         ;;
     user)
-        getUserProject "$ORG_OR_USER_NAME" "$PROJECT_ID"
-        # extract project uuid and assign it to the variable PROJECT_UUID
-        PROJECT_UUID=$(extractUserProjectID)
+        PROJECT_UUID=$(getUserProjectID "$ORG_OR_USER_NAME" "$PROJECT_ID")
+        echo "PROJECT_UUID: $PROJECT_UUID"
+        getUserProjectFields "$PROJECT_UUID"
         PROJECT_ITEM_UUID=$(getItemID $PROJECT_UUID $RESOURCE_NODE_ID)
 
-        updateUserScope
+        updateFieldScope
         ;;
     *)
         echo "ENTRYPOINT_MODE $ENTRYPOINT_MODE is not supported"
