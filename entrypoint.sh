@@ -1,7 +1,9 @@
 #!/bin/bash
 
+set -e
+
 if [ "$DEBUG_COMMANDS" = "true" ]; then
-    set -ex
+    set -x
 fi
 
 # DEBUG_MODE_ENABLED provides a way to enable the debug mode
