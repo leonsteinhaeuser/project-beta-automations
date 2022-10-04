@@ -160,6 +160,7 @@ To leverage the App authentication with this action the following steps are need
   - Repo: Checks: RO
   - Repo: Contents: RO
   - Repo: Environments: RO
+  - Repo: Issues: RW
   - Repo: Metadata: RO
   - Repo: PR: RW
   - Repo: Commit statuses: RO
