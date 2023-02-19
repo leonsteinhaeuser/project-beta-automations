@@ -52,6 +52,15 @@ inputs:
       The value must be an array of objects. 
       Example: '[{\"name\": \"Priority\",\"type\": \"text\",\"value\": \"uuid1\"},{\"name\": \"Severity\",\"type\": \"text\",\"value\": \"uuid2\"},{\"name\": \"Number\",\"type\": \"number\",\"value\": \"100\"},{\"name\": \"Date\",\"type\": \"date\",\"value\": \"2022-01-28T20:02:27.306+01:00\"},{\"name\": \"Single Select\",\"type\": \"single_select\",\"value\": \"Option 1\"},{\"name\": \"Iteration\",\"type\": \"iteration\",\"value\": \"Iteration 1\"}]'
     required: false
+  move_related_issues:
+    description: |
+      Specifies whether to move related issues.
+      The value must be of type boolean.
+      The value can be one of the following:
+      - true
+      - false
+    required: false
+    default: "false"
 branding:
   icon: 'terminal'
   color: 'blue'
@@ -97,6 +106,11 @@ runs:
       with:
         script: |
           core.setFailed('operation mode is set to custom_field but custom_field_values is not set.')
+
+    - name: Export MOVE_RELATED_ISSUES
+      if: inputs.move_related_issues != ''
+      shell: bash
+      run: echo "MOVE_RELATED_ISSUES=${{ inputs.move_related_issues }}" >> $GITHUB_ENV
 
     # execute organization script
     - name: Execute Status Organization automation
