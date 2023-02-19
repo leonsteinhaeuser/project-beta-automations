@@ -233,3 +233,23 @@ function updateDateField() {
         }
     }' -f project=$PROJECT_ID -f item=$ITEM_ID -f fieldid=$FIELD_ID -f fieldValue="$FIELD_VALUE" | sed -e "s+\"++g"
 }
+
+# getPullRequestByNodeID returns the pull request data by node id
+# $1: node id
+function getPullRequestByNodeID() {
+    local NODE_ID=$1
+    gh api graphql -f query='
+    query($nodeId: ID!) {
+      node(id: $nodeId) {
+        ... on PullRequest {
+          number
+          repository {
+            name
+            owner {
+              login
+            }
+          }
+        }
+      }
+    }' -F nodeId=$NODE_ID
+}
