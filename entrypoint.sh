@@ -10,6 +10,10 @@ fi
 # export DEBUG_MODE=true
 DEBUG_MODE_ENABLED="${DEBUG_MODE:-false}"
 
+# MOVE_RELATED_ISSUES provides a way to enable the move related issues
+# This will move all related issues to the same column as the pull request
+MOVE_RELATED_ISSUES="${MOVE_RELATED_ISSUES:-false}"
+
 # ENTRYPOINT_MODE described the mode this application should run with
 # supported ENTRYPOINT_MODEs are:
 #   - organization
@@ -96,6 +100,21 @@ function updateFieldScope() {
             STATUS_FIELD_VALUE_ID=$(extractFieldNodeSingleSelectSettingValue "Status" "$RESOURCE_NODE_VALUE")
             response=$(updateSingleSelectField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" "$STATUS_FIELD_ID" "$STATUS_FIELD_VALUE_ID")
             log="$log\n$response"
+
+            if [ "$MOVE_RELATED_ISSUES" = "true" ]; then
+                prdata=$(getPullRequestByNodeID $RESOURCE_NODE_ID)
+                PR_REPO_ISSUE_NUMBER=$(echo $prdata | jq .data.node.number)
+                PR_REPO_NAME=$(echo $prdata | jq .data.node.repository.name | sed -e 's+"++g')
+                PR_REPO_OWNER=$(echo $prdata | jq .data.node.repository.owner.login | sed -e 's+"++g')
+
+                # get linked issue ids
+                linked_issue_ids=$(getRelatedPullRequestIssueIDs $PR_REPO_OWNER $PR_REPO_NAME $PR_REPO_ISSUE_NUMBER)
+                for issue_id in $linked_issue_ids; do
+                    project_item_id=$(getItemID $PROJECT_UUID $issue_id)
+                    response=$(updateSingleSelectField "$PROJECT_UUID" "$project_item_id" "$STATUS_FIELD_ID" "$STATUS_FIELD_VALUE_ID")
+                    log="$log\nUpdating referenced issue id: [ $issue_id ]\n$response"
+                done
+            fi
             ;;
         custom_field)
             x=0 # counter
