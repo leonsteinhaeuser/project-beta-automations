@@ -51,6 +51,7 @@ Since the issues and pull requests from this repository are also managed by this
 | `status_value`           | false    | The status value to set. Must be one of the values defined in your project board **Status field settings**. If left unspecified, new items are added without an explicit status, and existing items are left alone. |
 | `operation_mode`         | false    | The operation mode to use. Must be one of `custom_field`, `status`. Defaults to: `status` |
 | `custom_field_values`    | false    | Provides the possibility to change custom fields. To be applied the **operation_mode** must be set to `custom_field`. For the json definition refer to [JSON-Definition](#JSON-Definition) |
+| `move_related_issues` | false | If set to `true` and the operation mode is set to `status`, the automation will also move related issues to the same column. This is useful if you want to move an issue to the same column as its related pull request. Defaults to: `false` |
 
 ## Getting started
 

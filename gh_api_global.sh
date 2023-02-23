@@ -233,3 +233,47 @@ function updateDateField() {
         }
     }' -f project=$PROJECT_ID -f item=$ITEM_ID -f fieldid=$FIELD_ID -f fieldValue="$FIELD_VALUE" | sed -e "s+\"++g"
 }
+
+# getPullRequestByNodeID returns the pull request data by node id
+# $1: node id
+function getPullRequestByNodeID() {
+    local NODE_ID=$1
+    gh api graphql -f query='
+    query($nodeId: ID!) {
+      node(id: $nodeId) {
+        ... on PullRequest {
+          number
+          repository {
+            name
+            owner {
+              login
+            }
+          }
+        }
+      }
+    }' -F nodeId=$NODE_ID
+}
+
+
+# getRelatedPullRequestIssueIDs returns a list of issue ids that are related to the pull request
+# $1: owner
+# $2: repo
+# $3: pull request number
+function getRelatedPullRequestIssueIDs() {
+    local OWNER=$1
+    local REPO=$2
+    local PULL_REQUEST_NUMBER=$3
+    gh api graphql -f query='
+    query($owner: String!, $repo: String!, $number: Int!) {
+      repository(owner: $owner, name: $repo) {
+        pullRequest(number: $number) {
+          id
+          closingIssuesReferences(first: 100) {
+            nodes {
+              id
+            }
+          }
+        }
+      }
+    }' -f owner=$OWNER -f repo=$REPO -F number=$(($PULL_REQUEST_NUMBER)) | jq .data.repository.pullRequest.closingIssuesReferences.nodes[].id | sed -e 's+"++g'
+}
