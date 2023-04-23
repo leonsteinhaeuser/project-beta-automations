@@ -151,6 +151,75 @@ jobs:
           status_value: ${{ env.done }} # Target status
 ```
 
+### Allowing the workflow to run on PR's coming from forks
+
+To allow PR from a fork to run the workflow use `pull_request_target` instead of `pull_request` like the example below.
+
+```yaml
+name: Project automations
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - closed
+
+# map fields with customized labels
+env:
+  done: Done ✅
+  in_progress: In Progress 🚧
+
+jobs:
+  pr_opened:
+    name: pr_opened
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_target' && github.event.action == 'opened'
+    steps:
+      - name: Move PR to ${{ env.in_progress }}
+        uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+        with:
+          gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          user: sample-user
+          # organization: sample-org
+          project_id: 1
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+          status_value: ${{ env.in_progress }} # Target status
+  pr_closed:
+    name: pr_closed
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_target' && github.event.action == 'closed'
+    steps:
+      - name: Move PR to ${{ env.done }}
+        uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+        with:
+          gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          user: sample-user
+          # organization: sample-org
+          project_id: 1
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+          status_value: ${{ env.done }} # Target status
+```
+
+Without replacing `pull_request` by `pull_request_target` the workflow will with `No GH Auth method configured, provide PAT or App ID/Key`.
+
+```
+gh cli is installed.
+Run echo "No GH Auth method configured, provide PAT or App ID/Key"; exit 1
+  echo "No GH Auth method configured, provide PAT or App ID/Key"; exit 1
+  shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+  env:
+    in_review: In Review
+No GH Auth method configured, provide PAT or App ID/Key
+Error: Process completed with exit code 1.
+```
+
+{% warning %}
+
+**Warning:** For workflows that are triggered by the `pull_request_target` event, the `GITHUB_TOKEN` is granted read/write repository permission unless the `permissions` key is specified and the workflow can access secrets, even when it is triggered from a fork. Although the workflow runs in the context of the base of the pull request, you should make sure that you do not check out, build, or run untrusted code from the pull request with this event. Additionally, any caches share the same scope as the base branch. To help prevent cache poisoning, you should not save the cache if there is a possibility that the cache contents were altered.
+
+{% endwarning %}
+
+
 ## GH App Auth
 
 To leverage the App authentication with this action the following steps are needed:
