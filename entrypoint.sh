@@ -130,8 +130,9 @@ function updateFieldScope() {
                     log="$log\n\n$nameField: $fieldID"
                     case $typeField in
                         'text')
-                            log="$log\nUpdating text field: $nameField with value: $valueField"
-                            response=$(updateTextField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID "$valueField")
+                            valueFieldWithoutQuotes=$(echo $valueField | sed 's/\"//g')
+                            log="$log\nUpdating text field: $nameField with value: $valueFieldWithoutQuotes"
+                            response=$(updateTextField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID "$valueFieldWithoutQuotes")
                             log="$log\n$response\n"
                             ;;
                         "number")
