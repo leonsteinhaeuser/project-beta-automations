@@ -1,0 +1,7 @@
+# source: https://github.com/TimonVS/pr-labeler-action
+feature: ['feature/*', 'feat/*']
+enhancement: ['enhancement/*', 'enhance/*', "enh/*"]
+fix: ['fix/*', 'bugfix/*', "bug-fix/*"]
+documentation: ['docs/*', 'doc/*', 'documentation/*']
+chore: ['chore/*', 'ch/*']
+refactor: ['refactor/*', 'ref/*']
