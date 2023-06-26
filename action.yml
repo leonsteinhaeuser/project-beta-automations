@@ -88,21 +88,21 @@ runs:
 
     - name: "Check if User or Organization is set"
       if: inputs.organization == '' && inputs.user == ''
-      uses: actions/github-script@v3
+      uses: actions/github-script@v6
       with:
         script: |
           core.setFailed('either user or organization is not specified.')
 
     - name: "Check if User and Organization are set"
       if: inputs.organization != '' && inputs.user != ''
-      uses: actions/github-script@v3
+      uses: actions/github-script@v6
       with:
         script: |
           core.setFailed('user and organization field is set. Only one is supported.')
 
     - name: "Check if operation_mode is set and custom_field_values is not null"
       if: inputs.operation_mode == 'custom_field' && inputs.custom_field_values == ''
-      uses: actions/github-script@v3
+      uses: actions/github-script@v6
       with:
         script: |
           core.setFailed('operation mode is set to custom_field but custom_field_values is not set.')
