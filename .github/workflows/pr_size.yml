@@ -1,22 +1,36 @@
-name: PR Size Label
+name: Pull Request automations
+
 on: pull_request
 
 jobs:
   size-label:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Add size label
-        uses: "pascalgn/size-label-action@v0.4.3"
+        uses: "pascalgn/size-label-action@v0.5.0"
         env:
-          GITHUB_TOKEN: "${{ secrets.PROJECT_PERMISSIONS_TOKEN }}"
-          IGNORED: ".gitignore\n*.md\n*.json\n*.sql\n*.yaml\n*.yml"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IGNORED: ".gitignore\n*.md\n*.MD\n*.json\n*.sql\n*.yaml\n*.yml\n.dockerignore\ngo.mod\ngo.sum\nLICENSE"
         with:
           sizes: >
             {
               "0": "XS",
-              "100": "S",
-              "500": "M",
-              "1000": "L",
-              "1500": "XL",
-              "2500": "XXL"
+              "50": "S",
+              "100": "M",
+              "200": "L",
+              "500": "XL",
+              "1000": "XXL"
             }
+
+  pr-labeler:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: TimonVS/pr-labeler-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
