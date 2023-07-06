@@ -234,6 +234,35 @@ function updateDateField() {
     }' -f project=$PROJECT_ID -f item=$ITEM_ID -f fieldid=$FIELD_ID -f fieldValue="$FIELD_VALUE" | sed -e "s+\"++g"
 }
 
+# clearField clears the given item field
+# Required arguments:
+#   1: project id
+#   2: project item id
+#   3: field id
+function clearField() {
+    local PROJECT_ID=$1
+    local ITEM_ID=$2
+    local FIELD_ID=$3
+    gh api graphql -f query='
+    mutation (
+        $project: ID!
+        $item: ID!
+        $fieldid: ID!
+    ) {
+        clearProjectV2ItemFieldValue(
+            input: {
+                projectId: $project
+                itemId: $item
+                fieldId: $fieldid
+            }
+        ) {
+            projectV2Item {
+                id
+            }
+        }
+    }' -f project=$PROJECT_ID -f item=$ITEM_ID -f fieldid=$FIELD_ID -f | sed -e "s+\"++g"
+}
+
 # getPullRequestByNodeID returns the pull request data by node id
 # $1: node id
 function getPullRequestByNodeID() {
