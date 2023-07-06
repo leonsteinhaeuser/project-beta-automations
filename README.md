@@ -248,7 +248,7 @@ A single json object is defined as follows:
 {
   "name": "Sample Text Field", # defines the name of the custom field
   "type": "text", # can be one of: text, number, date, single_select, iteration
-  "value": "High" # defines the value to set (string)
+  "value": "High" # defines the value to set (string), use null to clear the field
 }
 ```
 
