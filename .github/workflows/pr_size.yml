@@ -1,6 +1,9 @@
 name: Pull Request automations
 
-on: pull_request
+on:
+  pull_request_target:
+    branches:
+      - "**"
 
 jobs:
   size-label:
