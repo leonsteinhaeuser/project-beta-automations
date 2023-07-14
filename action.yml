@@ -1,6 +1,10 @@
 name: "project beta automations"
 description: 'GitHub ProjectV2/Project-Beta automation. It supports management of status and custom fields.'
 inputs:
+  gh_host:
+    description: 'The hostname will be used by gh-cli. This works for enterprise customers.'
+    required: false
+    default: "api.github.com"
   gh_token:
     description: 'Permission token that grants permission to the GitHub API. (Toke or App config is required)'
     required: false
@@ -79,12 +83,12 @@ runs:
     - name: "Authenticate gh cli Github App"
       if: inputs.gh_app_secret_key != '' && inputs.gh_app_ID != '' && inputs.gh_app_installation_ID
       shell: bash
-      run: "${{ github.action_path }}/gh_app_credential_helper.sh \"${{ inputs.gh_app_secret_key }}\" \"${{ inputs.gh_app_ID }}\" \"${{ inputs.gh_app_installation_ID }}\" | gh auth login --with-token"
+      run: "${{ github.action_path }}/gh_app_credential_helper.sh \"${{ inputs.gh_app_secret_key }}\" \"${{ inputs.gh_app_ID }}\" \"${{ inputs.gh_app_installation_ID }}\" | gh auth login --with-token --hostname \"${{ inputs.gh_host }}\""
 
     - name: "Authenticate gh cli PAT"
       if: inputs.gh_token != ''
       shell: bash
-      run: echo "${{ inputs.gh_token }}" | gh auth login --with-token
+      run: echo "${{ inputs.gh_token }}" | gh auth login --with-token --hostname "${{ inputs.gh_host }}"
 
     - name: "Check if User or Organization is set"
       if: inputs.organization == '' && inputs.user == ''
