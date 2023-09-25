@@ -4,7 +4,7 @@ inputs:
   gh_host:
     description: 'The hostname will be used by gh-cli. This works for enterprise customers.'
     required: false
-    default: "api.github.com"
+    default: "github.com"
   gh_token:
     description: 'Permission token that grants permission to the GitHub API. (Toke or App config is required)'
     required: false
