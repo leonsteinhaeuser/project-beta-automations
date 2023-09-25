@@ -38,20 +38,21 @@ Since the issues and pull requests from this repository are also managed by this
 
 ## Variables
 
-| Variable                 | Required | Description |
-| ------------------------ | -------- |------------ |
-| `gh_token`               | false    | The GitHub token to use for the automation. For App instructions refer to [GH App Auth](#GH-App-Auth). (`gh_token` or `gh_app_*` must be defined) |
-| `gh_app_ID`              | false    | The GitHub App ID used for App authentication. For App instructions refer to [GH App Auth](#GH-App-Auth). (`gh_token` or `gh_app_*` must be defined) |
-| `gh_app_installation_ID` | false    | The Github App installation ID binding the App to the target org. For App instructions refer to [GH App Auth](#GH-App-Auth). (`gh_token` or `gh_app_*` must be defined) |
-| `gh_app_secret_key`      | false    | The Github App Secret key used to sign App JWT tokens. For App instructions refer to [GH App Auth](#GH-App-Auth). (`gh_token` or `gh_app_*` must be defined) |
-| `user`                   | false    | The GitHub username that owns the projectboard. Either a user or an organization must be specified. |
-| `organization`           | false    | The GitHub organization that owns the projectboard. Either a user or an organization must be specified. |
-| `project_id`             | true     | The projectboard id. |
-| `resource_node_id`       | true     | The id of the resource node. |
-| `status_value`           | false    | The status value to set. Must be one of the values defined in your project board **Status field settings**. If left unspecified, new items are added without an explicit status, and existing items are left alone. |
-| `operation_mode`         | false    | The operation mode to use. Must be one of `custom_field`, `status`. Defaults to: `status` |
-| `custom_field_values`    | false    | Provides the possibility to change custom fields. To be applied the **operation_mode** must be set to `custom_field`. For the json definition refer to [JSON-Definition](#JSON-Definition) |
-| `move_related_issues` | false | If set to `true` and the operation mode is set to `status`, the automation will also move related issues to the same column. This is useful if you want to move an issue to the same column as its related pull request. Defaults to: `false` |
+| Variable                 | Required | Description                                                                                                                                                                                                                                  |
+|--------------------------| -------- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `gh_host`                | false    | The GitHub hostname of the enterpise installation to use for the automation. For App instructions refer to [GH App Auth](#GH-App-Auth).                                                                                                      |
+| `gh_token`               | false    | The GitHub token to use for the automation. For App instructions refer to [GH App Auth](#GH-App-Auth). (`gh_token` or `gh_app_*` must be defined)                                                                                            |
+| `gh_app_ID`              | false    | The GitHub App ID used for App authentication. For App instructions refer to [GH App Auth](#GH-App-Auth). (`gh_token` or `gh_app_*` must be defined)                                                                                         |
+| `gh_app_installation_ID` | false    | The Github App installation ID binding the App to the target org. For App instructions refer to [GH App Auth](#GH-App-Auth). (`gh_token` or `gh_app_*` must be defined)                                                                      |
+| `gh_app_secret_key`      | false    | The Github App Secret key used to sign App JWT tokens. For App instructions refer to [GH App Auth](#GH-App-Auth). (`gh_token` or `gh_app_*` must be defined)                                                                                 |
+| `user`                   | false    | The GitHub username that owns the projectboard. Either a user or an organization must be specified.                                                                                                                                          |
+| `organization`           | false    | The GitHub organization that owns the projectboard. Either a user or an organization must be specified.                                                                                                                                      |
+| `project_id`             | true     | The projectboard id.                                                                                                                                                                                                                         |
+| `resource_node_id`       | true     | The id of the resource node.                                                                                                                                                                                                                 |
+| `status_value`           | false    | The status value to set. Must be one of the values defined in your project board **Status field settings**. If left unspecified, new items are added without an explicit status, and existing items are left alone.                          |
+| `operation_mode`         | false    | The operation mode to use. Must be one of `custom_field`, `status`. Defaults to: `status`                                                                                                                                                    |
+| `custom_field_values`    | false    | Provides the possibility to change custom fields. To be applied the **operation_mode** must be set to `custom_field`. For the json definition refer to [JSON-Definition](#JSON-Definition)                                                   |
+| `move_related_issues`    | false | If set to `true` and the operation mode is set to `status`, the automation will also move related issues to the same column. This is useful if you want to move an issue to the same column as its related pull request. Defaults to: `false` |
 
 ## Getting started
 
