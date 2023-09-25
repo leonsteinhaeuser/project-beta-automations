@@ -122,9 +122,15 @@ function updateFieldScope() {
                 nameField=$(echo $RESOURCE_NODE_VALUE | jq ".[$x].name")
                 typeField=$(echo $RESOURCE_NODE_VALUE | jq ".[$x].type" | sed 's/\"//g')
                 valueField=$(echo $RESOURCE_NODE_VALUE | jq ".[$x].value")
-                if [ "$nameField" == "null" ] || [ "$valueField" == "null" ]; then
+                if [ "$nameField" == "null" ]; then
                     # no more custom fields
                     break
+                elif [ "$valueField" == "null" ]; then
+                    local fieldID=$(extractFieldID "$nameField")
+                    log="$log\n\n$nameField: $fieldID"
+                    log="$log\Clearing field: $nameField"
+                    response=$(clearField "$PROJECT_UUID" "$PROJECT_ITEM_UUID" $fieldID)
+                    log="$log\n$response\n"
                 else
                     local fieldID=$(extractFieldID "$nameField")
                     log="$log\n\n$nameField: $fieldID"

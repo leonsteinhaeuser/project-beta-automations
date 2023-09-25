@@ -89,3 +89,15 @@ custom_fields="[
 ]"
 RESOURCE_NODE_VALUE=$custom_fields
 $ENTRYPOINT_SCRIPT "$ENTRYPOINT_MODE" "$ENTRYPOINT_TYPE" "$ORG_OR_USER_NAME" "$PROJECT_ID" "$RESOURCE_NODE_ID" "$RESOURCE_NODE_VALUE"
+
+echo "===== clear custom fields"
+
+custom_fields="[
+    {
+        \"name\": \"Date\",
+        \"type\": \"date\",
+        \"value\": \"null\"
+    }
+]"
+RESOURCE_NODE_VALUE=$custom_fields
+$ENTRYPOINT_SCRIPT "$ENTRYPOINT_MODE" "$ENTRYPOINT_TYPE" "$ORG_OR_USER_NAME" "$PROJECT_ID" "$RESOURCE_NODE_ID" "$RESOURCE_NODE_VALUE"
