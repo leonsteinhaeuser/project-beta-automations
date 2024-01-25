@@ -5,13 +5,18 @@ on:
     types:
       - opened
   pull_request_target:
-    types:
-      - opened
   pull_request:
-    types:
-      - opened
 
 jobs:
+  debug:
+    name: debug
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print event name
+        run: echo ${{ github.event_name }}
+      - name: Print event action
+        run: echo ${{ github.event.action }}
+
   issue_opened:
     name: issue_opened
     runs-on: ubuntu-latest
@@ -20,22 +25,26 @@ jobs:
       - name: 'Move issue to Todo'
         uses: leonsteinhaeuser/project-beta-automations@v2.1.0
         with:
-          gh_token: ${{ secrets.PROJECT_PERMISSIONS_TOKEN }}
+          gh_app_ID: ${{ vars.GH_APP_ID }}
+          gh_app_installation_ID: ${{ vars.GH_APP_INSTALLATION_ID }}
+          gh_app_secret_key: ${{ secrets.GH_APP_SECRET_KEY }}
+          project_id: ${{ vars.PROJECT_ID }}
           user: leonsteinhaeuser
-          project_id: ${{ secrets.PROJECT_ID }}
           resource_node_id: ${{ github.event.issue.node_id }}
           status_value: "Todo"
 
   pr_opened:
     name: pr_opened
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')
     steps:
       - name: 'Move PR to "In Progress"'
         uses: leonsteinhaeuser/project-beta-automations@v2.1.0
         with:
-          gh_token: ${{ secrets.PROJECT_PERMISSIONS_TOKEN }}
+          gh_app_ID: ${{ vars.GH_APP_ID }}
+          gh_app_installation_ID: ${{ vars.GH_APP_INSTALLATION_ID }}
+          gh_app_secret_key: ${{ secrets.GH_APP_SECRET_KEY }}
+          project_id: ${{ vars.PROJECT_ID }}
           user: leonsteinhaeuser
-          project_id: ${{ secrets.PROJECT_ID }}
           resource_node_id: ${{ github.event.pull_request.node_id }}
           status_value: "In Progress"
